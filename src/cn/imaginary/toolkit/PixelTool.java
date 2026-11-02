@@ -1,5 +1,6 @@
 package cn.imaginary.toolkit;
 
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 
@@ -7,6 +8,20 @@ public class PixelTool {
     private String tag_png = "png";
 
     private ImageTool imageTool = new ImageTool();
+
+    private Rectangle rectangle;
+
+    public void setPixelSize(Rectangle rectangle) {
+        this.rectangle = rectangle;
+    }
+
+    public void setPixelSize(int x, int y, int width, int height) {
+        setPixelSize(new Rectangle(x, y, width, height));
+    }
+
+    public Rectangle getPixelSize() {
+        return rectangle;
+    }
 
     public BufferedImage read(File file) {
         return imageTool.read(file);
@@ -53,6 +68,12 @@ public class PixelTool {
     }
 
     private BufferedImage toPixel(BufferedImage image, int pixelSize) {
-        return imageTool.toPixel(image, pixelSize);
+        Rectangle rectangle = getPixelSize();
+        if (null == rectangle) {
+            return imageTool.toPixel(image, pixelSize);
+        } else {
+            return imageTool.toPixel(image, pixelSize, rectangle.x, rectangle.y, rectangle.width, rectangle.height);
+
+        }
     }
 }
