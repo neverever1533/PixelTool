@@ -43,14 +43,33 @@ public class ImageTool {
     }
 
     public BufferedImage toPixel(BufferedImage root, int pixelSize) {
+        return toPixel(root, pixelSize, 0, 0, -1, -1);
+    }
+
+    public BufferedImage toPixel(BufferedImage root, int pixelSize, int offsetX, int offsetY, int width, int height) {
         if (null != root) {
-            if (pixelSize <= 1) {
-                return root;
-            }
             int w = root.getWidth();
             int h = root.getHeight();
-            for (int x = w - 1; x > 0; x--) {
-                for (int y = h - 1; y > 0; y--) {
+            if (offsetX < 0) {
+                offsetX = 0;
+            }
+            if (offsetY < 0) {
+                offsetY = 0;
+            }
+            if (width <= 0) {
+                width = w;
+            }
+            if (height <= 0) {
+                height = h;
+            }
+            if (pixelSize <= 1 || width > w || height > h || offsetX + width > w || offsetY + height > h) {
+                return root;
+            }
+            w = offsetX + width;
+            h = offsetY + height;
+//            System.out.println("it70:" + offsetX + "/" + offsetY + "/" + w + "/" + h);
+            for (int x = w - 1; x > offsetX; x--) {
+                for (int y = h - 1; y > offsetY; y--) {
                     int rgb = root.getRGB(x, y);
                     if (x % pixelSize == 0 && y % pixelSize == 0) {
                         for (int i = 0; i < pixelSize; i++) {
