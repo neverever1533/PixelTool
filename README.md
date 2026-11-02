@@ -18,6 +18,7 @@
 
 ### 项目进度：
 - [x] to pixel
+    * pixel size
 - [x] update colors
     * depth
     * color size
@@ -26,16 +27,31 @@
 ## 用法（Usage）：
 * ### PixelTool:
 
-* #### toPixel():
+* #### setPixelSize():
 
 ```java
-toPixel(File inFile, File outFile, int pixelSize){}
+public void setPixelSize(int x, int y, int width, int height){}
 ```
 
 ##### or:
 
 ```java
-toPixel(File inFile, String formatName, File outFile, int pixelSize){}
+public void setPixelSize(Rectangle rectangle){}
+```
+
+设置局部处理范围大小，不填写则默认处理整个图片。
+
+
+* #### toPixel():
+
+```java
+public void toPixel(File inFile, File outFile, int pixelSize){}
+```
+
+##### or:
+
+```java
+public void toPixel(File inFile, String formatName, File outFile, int pixelSize){}
 ```
 
 将读取的图片文件（inFile）,像素化（pixelSize设为2以上生效，若结果不理想可缓增。），然后保存为图片（outFile）。（默认导出png，图片格式formatName可选"jpg"，"png"等。）
@@ -44,13 +60,13 @@ toPixel(File inFile, String formatName, File outFile, int pixelSize){}
 * #### updateColors():
 
 ```java
-updateColors(File inFile, File outFile, int colorSize){}
+public void updateColors(File inFile, File outFile, int colorSize){}
 ```
 
 ##### or:
 
 ```java
-updateColors(File inFile, String formatName, File outFile, int colorSize){}
+public void updateColors(File inFile, String formatName, File outFile, int colorSize){}
 ```
 
 读取图片文件（inFile），color size为1-256的整数（自适应区间），降低色数（将红，绿和蓝各色限制为2，4，8，16，32，64，128和256色其中之一），然后保存为图片（outFile）。（32色基本已达到256色效果。）
@@ -59,13 +75,13 @@ updateColors(File inFile, String formatName, File outFile, int colorSize){}
 * #### getImage():
 
 ```java
-getImage(File inFile, String formatName, File outFile, int depth){}
+public void getImage(File inFile, String formatName, File outFile, int depth){}
 ```
 
 ##### or:
 
 ```java
-getImage(File inFile, String formatName, File outFile, int depth){}
+public void getImage(File inFile, String formatName, File outFile, int depth){}
 ```
 
 效果如上updateColors（），depth为1-8的整数，降低色数（将红，绿和蓝各色限制为2¹-2⁸色，depth为8则对应着256色）。
