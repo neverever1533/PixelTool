@@ -1,6 +1,6 @@
 # PixelTool
 
-图片像素化，调色工具。(image to sprite, less colors etc.)
+图片像素风格化，调色和描边等工具。(image to sprite like, less colors, stroke etc.)
 
 图示：
 
@@ -12,7 +12,7 @@
 ## 说明（about）：
 
 当前实现：
-* 图片像素化
+* 像素风格化
 * 调整2-256色数
 * 描边
 
@@ -56,7 +56,7 @@ public void toPixel(File inFile, File outFile, int pixelSize){}
 public void toPixel(File inFile, String formatName, File outFile, int pixelSize){}
 ```
 
-将读取的图片文件（inFile）,像素化（pixelSize设为2以上生效，若结果不理想可缓增。），然后保存为图片（outFile）。（默认导出png，图片格式formatName可选"jpg"，"png"等。）
+将读取的图片文件（inFile）,像素风格化（pixelSize设为2以上生效，若结果不理想可缓增。），然后保存为图片（outFile）。（默认导出png，图片格式formatName可选"jpg"，"png"等。）
 
 
 * #### updateColors():
@@ -131,7 +131,7 @@ public void stroke(File inFile, String formatName, File outFile){}
 
 ### 使用程序：
 
-#### 像素化：
+#### 像素风格化：
 
 ```java
 String inFilePath = "in.png";
