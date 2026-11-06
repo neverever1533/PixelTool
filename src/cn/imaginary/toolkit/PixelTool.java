@@ -11,15 +11,17 @@ public class PixelTool {
 
     private Rectangle rectangle;
 
-    public void setPixelSize(Rectangle rectangle) {
+    private boolean is_stroke_outside = true;
+
+    public void setPixelClip(Rectangle rectangle) {
         this.rectangle = rectangle;
     }
 
-    public void setPixelSize(int x, int y, int width, int height) {
-        setPixelSize(new Rectangle(x, y, width, height));
+    public void setPixelClip(int x, int y, int width, int height) {
+        setPixelClip(new Rectangle(x, y, width, height));
     }
 
-    public Rectangle getPixelSize() {
+    public Rectangle getPixelClip() {
         return rectangle;
     }
 
@@ -59,6 +61,34 @@ public class PixelTool {
         write(updateColors(read(inFile), colorSize), formatName, outFile);
     }
 
+    public void stroke(File inFile, File outFile) {
+        stroke(inFile, tag_png, outFile);
+    }
+
+    public void stroke(File inFile, String formatName, File outFile) {
+        write(stroke(read(inFile)), formatName, outFile);
+    }
+
+    private BufferedImage stroke(BufferedImage image) {
+        return imageTool.stroke(image, isStrokeOutside());
+    }
+
+    public boolean isStrokeOutside() {
+        return is_stroke_outside;
+    }
+
+    public void setStrokeOutside(boolean isOutside) {
+        is_stroke_outside = isOutside;
+    }
+
+    public void setStrokeColor(Color color) {
+        imageTool.setStrokeColor(color);
+    }
+
+    public void setStrokeColor(int alpha, int red, int green, int blue) {
+        imageTool.setStrokeColor(alpha, red, green, blue);
+    }
+
     public void toPixel(File inFile, File outFile, int pixelSize) {
         toPixel(inFile, tag_png, outFile, pixelSize);
     }
@@ -68,7 +98,7 @@ public class PixelTool {
     }
 
     private BufferedImage toPixel(BufferedImage image, int pixelSize) {
-        Rectangle rectangle = getPixelSize();
+        Rectangle rectangle = getPixelClip();
         if (null == rectangle) {
             return imageTool.toPixel(image, pixelSize);
         } else {
