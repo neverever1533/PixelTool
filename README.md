@@ -14,6 +14,7 @@
 当前实现：
 * 图片像素化
 * 调整2-256色数
+* 描边
 
 
 ### 项目进度：
@@ -22,21 +23,22 @@
 - [x] update colors
     * depth
     * color size
+- [x] stroke
 
 
 ## 用法（Usage）：
 * ### PixelTool:
 
-* #### setPixelSize():
+* #### setPixelClip():
 
 ```java
-public void setPixelSize(int x, int y, int width, int height){}
+public void setPixelClip(int x, int y, int width, int height){}
 ```
 
 ##### or:
 
 ```java
-public void setPixelSize(Rectangle rectangle){}
+public void setPixelClip(Rectangle rectangle){}
 ```
 
 设置局部处理范围大小，不填写则默认处理整个图片。
@@ -87,7 +89,45 @@ public void getImage(File inFile, String formatName, File outFile, int depth){}
 效果如上updateColors（），depth为1-8的整数，降低色数（将红，绿和蓝各色限制为2¹-2⁸色，depth为8则对应着256色）。
 
 
+* ####  setStrokeColor():
+
+```java
+public void setStrokeColor(Color color){}
+```
+
+##### or:
+
+```java
+public void setStrokeColor(int alpha, int red, int green, int blue){}
+```
+
+设置描边颜色，不填写则默认黑色。
+
+
+* #### stroke:
+
+```java
+public void setStrokeOutside(boolean isOutside){}
+```
+
+设置沿着轮廓描边或以边沿描边，不填写则默认在外侧1像素处描边。
+
+
+```java
+public void stroke(File inFile, String formatName, File outFile){}
+```
+
+##### or:
+
+```java
+public void stroke(File inFile, String formatName, File outFile){}
+```
+
+扫描图像并对非透明的轮廓进行描边。
+
+
 ---
+
 
 ### 使用程序：
 
