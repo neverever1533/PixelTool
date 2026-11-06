@@ -136,19 +136,23 @@ public void stroke(File inFile, String formatName, File outFile){}
 ```java
 String inFilePath = "in.png";
 String outFilePath = "out.png";
-int pixelSize=4;
+int pixelSize = 4;
 
 File inFile = new File(inFilePath);
 File outFile = new File(outFilePath);
 
 PixelTool pixelTool = new PixelTool();
+// pixelTool.setPixelClip(0, 0, 16, 16);
 pixelTool.toPixel(inFile, outFile, pixelSize);
 ```
+
+像素风格化时，可选择位置和范围，不填写则默认处理全图。
+
 
 #### 调色：
 
 ```java
-int colorSize=32;
+int colorSize = 32;
 
 pixelTool.updateColors(inFile, outFile, colorSize);
 ```
@@ -166,6 +170,17 @@ pixelTool.getImage(inFile, formatName, outFileJpg, depth);
 ```
 
 调色有两种方法：updateColors(inFile, outFile, colorSize)，getImage(inFile, outFile, depth)，最终效果相同可任选其一使用。
+
+
+#### 描边：
+
+```java
+// pixelTool.setStrokeColor(Color.Black);
+// pixelTool.setStrokeOutside(true);
+pixelTool.stroke(inFile, outFile);
+```
+
+描边可设置颜色和描边位置，不填写则默认黑色和沿着轮廓外描边。
 
 
 ---
