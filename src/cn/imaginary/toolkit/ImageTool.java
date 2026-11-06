@@ -1,5 +1,7 @@
 package cn.imaginary.toolkit;
 
+import cn.imaginary.toolkit.image.RGBTool;
+
 import javax.imageio.ImageIO;
 
 import java.awt.*;
@@ -20,6 +22,9 @@ public class ImageTool {
 
     private int depth = 4;
     private int depth_item = 2;
+    private int rgb = -1;
+
+    private RGBTool rgbTool = new RGBTool();
 
     public BufferedImage read(File imageFile) {
         if (null != imageFile) {
@@ -39,6 +44,70 @@ public class ImageTool {
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
+        }
+    }
+
+    public void setStrokeColor(Color color) {
+        if (null != color) {
+            setStrokeColor(color.getAlpha(), color.getRed(), color.getGreen(), color.getBlue());
+        }
+    }
+
+    public void setStrokeColor(int alpha, int red, int green, int blue) {
+        setStrokeRGB(rgbTool.getRGB(alpha, red, green, blue));
+    }
+
+    public void setStrokeRGB(int rgb) {
+        this.rgb = rgb;
+    }
+
+    public int getStrokeBlack() {
+        return rgbTool.getRGB(255, 0, 0, 0);
+    }
+
+    public int getStrokeRGB() {
+        if (rgb == -1) {
+            rgb = getStrokeBlack();
+        }
+        return rgb;
+    }
+
+    public BufferedImage stroke(BufferedImage root) {
+        boolean isOutside = true;
+        return stroke(root, isOutside);
+    }
+
+    public BufferedImage stroke(BufferedImage root, boolean isOutside) {
+        if (null != root) {
+            int w = root.getWidth();
+            int h = root.getHeight();
+            int rgb_stroke = getStrokeRGB();
+//            System.out.println("it90 a:" + rgbTool.getAlpha(rgb) + "/r:" + rgbTool.getRed(rgb) + "/g:" + rgbTool.getGreen(rgb) + "/b:" + rgbTool.getBlue(rgb));
+            BufferedImage image = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
+            for (int x = 0; x < w; x++) {
+                for (int y = 0; y < h; y++) {
+                    if (isOutside) {
+                        if (rgbTool.isAlpha(root, x, y) && ((x > 0 && !rgbTool.isAlpha(root, x - 1, y)) || (x < w - 1 && !rgbTool.isAlpha(root, x + 1, y)) || (y > 0 && !rgbTool.isAlpha(root, x, y - 1)) || (y < h - 1 && !rgbTool.isAlpha(root, x, y + 1)))) {
+                            image.setRGB(x, y, rgb_stroke);
+                        }
+                    } else {
+                        if (!rgbTool.isAlpha(root, x, y) && ((x > 0 && rgbTool.isAlpha(root, x - 1, y)) || (x < w - 1 && rgbTool.isAlpha(root, x + 1, y)) || (y > 0 && rgbTool.isAlpha(root, x, y - 1)) || (y < h - 1 && rgbTool.isAlpha(root, x, y + 1)))) {
+                            image.setRGB(x, y, rgb_stroke);
+                        }
+                    }
+                }
+            }
+            drawImage(root, image);
+            return root;
+        }
+        return null;
+    }
+
+    private void drawImage(BufferedImage root, BufferedImage image) {
+        if (null != root && null != image) {
+            Graphics2D graphics2D = root.createGraphics();
+            graphics2D.drawImage(image, 0, 0, null);
+            graphics2D.dispose();
         }
     }
 
@@ -127,25 +196,22 @@ public class ImageTool {
             depth = getDepth();
             int size = (int) Math.pow(depth_item, depth);
             int item = Color_Size_256 / size;
-            BufferedImage img = new BufferedImage(image.getWidth(), image.getHeight(), BufferedImage.TYPE_INT_ARGB);
-            int pixel;
+            int w = image.getWidth();
+            int h = image.getHeight();
+            BufferedImage img = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
             int rgb;
             int a;
             int r;
             int b;
             int g;
-            for (int i = 0; i < image.getWidth(); i++) {
-                for (int j = 0; j < image.getHeight(); j++) {
+            for (int i = 0; i < w; i++) {
+                for (int j = 0; j < h; j++) {
                     rgb = image.getRGB(i, j);
-                    a = (rgb >> 24) & 0xff;
-                    r = (rgb >> 16) & 0xff;
-                    g = (rgb >> 8) & 0xff;
-                    b = rgb & 0xff;
-                    r = updateDepth(r, size, item) & 0xff;
-                    g = updateDepth(g, size, item) & 0xff;
-                    b = updateDepth(b, size, item) & 0xff;
-                    pixel = (a << 24) | (r << 16) | (g << 8) | b;
-                    img.setRGB(i, j, pixel);
+                    a = rgbTool.getAlpha(rgb);
+                    r = updateDepth(rgbTool.getRed(rgb), size, item);
+                    g = updateDepth(rgbTool.getGreen(rgb), size, item);
+                    b = updateDepth(rgbTool.getBlue(rgb), size, item);
+                    img.setRGB(i, j, rgbTool.getRGB(a, r, g, b));
                 }
             }
             return img;
